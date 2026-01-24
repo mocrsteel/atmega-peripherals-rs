@@ -1,0 +1,9 @@
+[build]
+target = "avr-none"
+rustflags = ["-C", "target-cpu=atmega2560"]
+
+[target.'cfg(target_arch = "avr")']
+runner = "ravedude --open-console --baudrate 57600 -P /dev/tty.usbmodem21101"
+
+[unstable]
+build-std = ["core"]
