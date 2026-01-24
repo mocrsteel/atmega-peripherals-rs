@@ -69,6 +69,28 @@
 //! * 2.0 ms = 500 ticks (0 -> 499)
 //! * 2.5 ms = 625 ticks
 
+use arduino_hal::pac::{TC1, TC3, TC4, TC5};
+
+
+pub enum ServoOpts {
+    Prescale8,
+    Prescale64,
+}
+
+/// Counter value at 0.5 ms for Prescale8
+pub static PRESCALE8_SERVO_MIN: u16 = 9999;
+/// Counter value at 2.5 ms for Prescale8
+pub static PRESCALE8_SERVO_MAX: u16 = 4999;
+/// Counter value at 20 ms for Prescale8
+pub static PRESCALE8_PWM_TOP: u16 = 49999;
+
+/// FastPWM (mode 14) 0b1110 split in WGM 0:1 (TCCRxA) and 2:3 (TCCRxB)
+pub static WGM01: u8 = 0b10;
+/// FastPWM (mode 14) 0b1110 split in WGM 0:1 (TCCRxA) and 2:3 (TCCRxB)
+pub static WGM23: u8 = 0b11;
+/// Output compare mode for FastPWM: Clear OCnx on compare match, set OCnA at BOTTOM. Register TCCRB COMnA/B/C 0:1
+pub static COM1A: u8 = 0b10;
+
 /// Trait implements standard functions required to operate a servo for a given Timer/Counter `TC`
 /// and a pin `PIN`.
 pub trait ServoPinOps<'a, TC, PIN> {
@@ -81,9 +103,35 @@ pub trait ServoPinOps<'a, TC, PIN> {
 /// Restricts the combinations of pin - TC as per the ATMega2560 documentation.
 /// 
 /// > Note: Built for the Elegoo ATMega2560. Compatible with the Arduino Mega board.
+/// 
+/// The servo will always be initalized at 0 degrees of rotation.
 pub struct ServoPin<'a, TC, PIN> {
     pin: PIN,
     tc: &'a TC,
 }
 
 
+impl <'a> ServoPinOps<'a, TC1, PB5> for ServoPin<'a, TC1, PB5>{ 
+    /// Servo pin operations generator for:
+    /// * Port PB5
+    /// * Pin D11
+    /// * Timer/Counter 1
+    /// * Output Compare Channel A
+    fn new(tc: &'a TC1, pin: PB5) -> Self {
+        tc.tccr1a().reset();
+        tc.tccr1b().reset();
+        tc.tccr1c().reset();
+
+        tc.tccr1a().write(|w| w.com1a().set(0b10).wgm1().set(0b10));
+        tc.tccr1b().write(|w| w.wgm1().set(0b11).cs1().prescale_8());
+
+        tc.icr1().write(|w| w.set(PRESCALE8_PWM_TOP));
+
+        tc.ocr1a().write(|w| w.set(PRESCALE8_SERVO_MIN));
+
+        ServoPin {
+            pin,
+            tc
+        }
+    }
+}
