@@ -1,0 +1,25 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Attach to QEMU",
+            "type": "gdb",
+            "request": "attach",
+            "executable": "${workspaceFolder}/target/avr-none/debug/arduino-mega.elf",
+            "target": "localhost:1234",
+            "remote": true,
+            "gdbpath": "/opt/homebrew/bin/avr-gdb",
+            "cwd": "${workspaceRoot}",
+            "valuesFormatting": "prettyPrinters",
+            "preLaunchTask": "rust: cargo run",
+            "autorun": [
+                "break main",
+                "continue",
+                "list"
+            ]
+        },
+    ]
+}

@@ -1,0 +1,42 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "type": "cargo",
+      "command": "build",
+      "problemMatcher": ["$rustc"],
+      "group": "build",
+      "label": "Cargo Build AVR"
+    },
+    {
+      "label": "Start QEMU (AVR)",
+      "type": "shell",
+      "command": "qemu-system-avr",
+      "args": [
+        "-S",
+        "-s",
+        "-machine",
+        "mega2560",
+        "-bios",
+        "${workspaceFolder}/target/avr-none/debug/arduino-mega.elf"
+      ],
+      "isBackground": true,
+      "problemMatcher": {
+        "pattern": { "regexp": "." },
+        "background": {
+          "activeOnStart": true,
+          "beginsPattern": ".",
+          "endsPattern": "."
+        }
+      }
+    },
+    {
+      "label": "Build and Start QEMU",
+      "dependsOrder": "sequence",
+      "dependsOn": [
+        "Cargo Build AVR",
+        "Start QEMU (AVR)"
+      ]
+    }
+  ]
+}

@@ -7,7 +7,10 @@ rustflags = ["-C", "target-cpu=atmega2560"]
 
 # Windows config (WSL2, avrdude installed for windows)
 [target.'cfg(target_arch = "avr")']
-runner = "/mnt/c/avr/ravedude --open-console --baudrate 57600 -P /dev/tty.usbmodem21101"
+# Actual board
+runner = "ravedude --open-console --baudrate 57600 -P /dev/tty.usbmodem1101"
+# QEMU
+# runner = "qemu-system-avr -s -S -M mega2560 -nographic -bios target/avr-none/debug/arduino-mega.elf"
 
 [unstable]
 build-std = ["core"]
