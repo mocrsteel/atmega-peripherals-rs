@@ -6,8 +6,6 @@ use arduino_hal::{default_serial};
 use panic_halt as _;
 use ufmt::uwriteln;
 
-use avr_servo::{ServoPin, ServoPinOps};
-
 #[arduino_hal::entry]
 fn main() -> ! {
     let dp = arduino_hal::Peripherals::take().unwrap();
@@ -17,6 +15,9 @@ fn main() -> ! {
     let tc = dp.TC3;
     let servo = ServoPin::new(&tc, pins.d5);
     
+    // Joystick min = 0
+    // Joystick max = 1023
+   
     loop {
         for deg in [0, 45, 90, 135, 180, 135, 90, 45] {
             servo.set_rotation(deg as u8);
