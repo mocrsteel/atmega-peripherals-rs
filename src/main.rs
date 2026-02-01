@@ -6,6 +6,8 @@ use arduino_hal::{default_serial};
 use panic_halt as _;
 use ufmt::uwriteln;
 
+use avr_servo::{ServoPin, ServoPinOps};
+
 #[arduino_hal::entry]
 fn main() -> ! {
     let dp = arduino_hal::Peripherals::take().unwrap();
