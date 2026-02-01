@@ -29,7 +29,7 @@ path = "./avr-servo"
 [profile.dev]
 panic = "abort"
 lto = true
-opt-level = 3
+opt-level = 2
 
 [profile.release]
 panic = "abort"
