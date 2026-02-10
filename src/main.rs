@@ -1,6 +1,8 @@
 #![no_std]
 #![no_main]
 
+mod max7219;
+
 use arduino_hal::default_serial;
 use arduino_hal::prelude::*;
 use panic_halt as _;
