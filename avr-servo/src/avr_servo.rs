@@ -1,3 +1,30 @@
+//! Base code for a servo driver implementations.
+//! Can be applied to most AVR based chipsets.
+//! 
+//! # Applications
+//! 
+//! Built and tested for:
+//! 
+//! * `ATMega2560` (Arduino Mega)
+//! 
+//! # Example
+//! ```
+//! use arduino_hal::hal::port::{PB7};
+//! use arduino_hal::pac::{TC1};
+//! use crate::avr_servo::*;
+//! use crate::impl_servo;
+//! 
+//! impl_servo! {
+//!         /// * Port: PB7
+//!         /// * Timer/Counter1 (16-bit)
+//!         /// * Output compare channel C
+//!         /// * Pin D13
+//!         pin: PB7,
+//!         tc: 1,
+//!         channel: c,
+//! }
+//! ```
+
 pub use core::marker::PhantomData;
 pub use arduino_hal::port::{
     mode::{Floating, Input},
@@ -88,6 +115,33 @@ pub struct ServoPin<'a, TC, PIN> {
     pub(crate)mode: ServoMode,
 }
 
+/// Servo to implement the [ServoPinOps] trait for the different pins defines.
+/// 
+/// # How to use
+/// 
+/// Use this macro to implement the ServoPin and ServoPinOps for the required AVR board.
+/// 
+/// Fields to be filled in the macro:
+/// * `pin`: The `arduino-hal` defined port for your MCU.
+/// * `tc`: The Timer/Counter identifier. Must be a 16-bit compatible timer/counter.
+/// * `channel`: The correct output compare channel for the port (i.e. in the example: port `PB7` uses `OC1C`).
+/// 
+/// ```
+/// use arduino_hal::hal::port::PB7;
+/// use arduino_hal::pac::TC1;
+/// use crate::avr_servo::*;
+/// use crate::impl_servo;
+/// 
+/// impl_servo! {
+///         /// * Port: PB7
+///         /// * Timer/Counter1 (16-bit)
+///         /// * Output compare channel C
+///         /// * Pin D13
+///         pin: PB7,
+///         tc: 1,
+///         channel: c,
+/// }
+/// ```
 #[macro_export]
 macro_rules! impl_servo {
     (

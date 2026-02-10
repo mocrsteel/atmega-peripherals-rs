@@ -7,6 +7,36 @@
 //! The following boards have been implemented for this driver:
 //! * `arduino-mega`: `atmega2560`, `arduino-mega2560`
 //!
+//! ## How to use
+//! 
+//! Install the crate using the correct board: `cargo add avr-servo --features arduino-mega`.
+//! 
+//! Then, simply import the crate's `ServoPin` struct and `ServoPinOps` trait to start using it.
+//! The crate has been built to be sufficiently generic across multiple AVR boards.
+//! 
+//! ```
+//! use arduino_hal;
+//! use avr_servo::{ServoPin, ServoPinOps};
+//! 
+//! #[arduino_hal::entry]
+//! fn main() -> ! {
+//!     let dp = arduino_hal::Peripherals::take().unwrap();
+//!     let pins = arduino_hal::pins!(dp);
+//!     let mut serial = default_serial!(dp, pins, 57600);
+//! 
+//!     let tc = dp.TC3;
+//!     let servo = ServoPin::new(&tc, pins.d5);
+//!     
+//!     loop {
+//!         for deg in [0, 45, 90, 135, 180, 135, 90, 45] {
+//!             servo.set_rotation(deg as u8);
+//!             uwriteln!(&mut serial, "Rotating to {} degrees", deg).unwrap_infallible();
+//!             arduino_hal::delay_ms(500);
+//!         }
+//!     }
+//! }
+//! ```
+//! 
 //! ## Servo control
 //!
 //! * 20 ms PWM period required = 50 Hz
