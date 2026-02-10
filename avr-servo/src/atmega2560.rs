@@ -1,3 +1,33 @@
+//! Servo driver implementation for the ATMega2560, typically the Arduino Mega.
+//! 
+//! **Requires the `avr-hal` or `arduino-hal` crate.**
+//! This crate implements traits defined in those packages created by [Rahix](https://github.com/Rahix/avr-hal).
+//! 
+//! # How to use
+//! 
+//! ```
+//! use arduino_hal;
+//! use avr_servo::{ServoPin, ServoPinOps};
+//! 
+//! #[arduino_hal::entry]
+//! fn main() -> ! {
+//!     let dp = arduino_hal::Peripherals::take().unwrap();
+//!     let pins = arduino_hal::pins!(dp);
+//!     let mut serial = default_serial!(dp, pins, 57600);
+//! 
+//!     let tc = dp.TC3;
+//!     let servo = ServoPin::new(&tc, pins.d5);
+//!     
+//!     loop {
+//!         for deg in [0, 45, 90, 135, 180, 135, 90, 45] {
+//!             servo.set_rotation(deg as u8);
+//!             uwriteln!(&mut serial, "Rotating to {} degrees", deg).unwrap_infallible();
+//!             arduino_hal::delay_ms(500);
+//!         }
+//!     }
+//! }
+//! ```
+//! 
 use arduino_hal::hal::port::{PB7, PB6, PB5, PE5, PE4, PE3, PH5, PH4, PH3, PL5, PL4, PL3};
 use arduino_hal::pac::{TC1, TC3, TC4, TC5};
 use crate::avr_servo::*;
