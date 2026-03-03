@@ -3,6 +3,7 @@
 
 mod max7219;
 
+use arduino_hal::Spi;
 use arduino_hal::default_serial;
 use arduino_hal::prelude::*;
 use panic_halt as _;
@@ -15,6 +16,8 @@ use max7219::*;
 fn main() -> ! {
     let dp = arduino_hal::Peripherals::take().unwrap();
     let pins = arduino_hal::pins!(dp);
+
+    // let mut spi = Spi::new(dp.SPI, pins.d52.into_output(), pins.d51.into_output(), pins.d50.into_pull_up_input(), pins.d53.into_output(), arduino_hal::spi::Settings::default());
 
     let mut data_pin = pins.d3.into_output().downgrade();
     let mut cs_pin = pins.d4.into_output().downgrade();
