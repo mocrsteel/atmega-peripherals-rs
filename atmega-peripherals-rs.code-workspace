@@ -4,7 +4,11 @@
 			"path": "."
 		},
 		{
-			"path": "avr-servo"
+			"path": "⚙ avr-servo"
+		},
+		{
+			"path": "../playground",
+			"name": "♦️ Playground"
 		}
 	],
 	"settings": {}
